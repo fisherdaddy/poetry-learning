@@ -5,7 +5,7 @@
       <div class="container mx-auto px-4">
         <div class="flex items-center h-16">
           <!-- Logo -->
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2 cursor-pointer" @click="scrollToTop">
             <div class="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center shadow-lg">
               <span class="text-xl md:text-2xl text-white font-bold font-kai">诗</span>
             </div>
@@ -122,7 +122,7 @@
                   <div class="text-sm text-gray-600 font-medium">难度等级</div>
                 </div>
                 <div class="text-center">
-                  <div class="text-4xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent mb-2">300+</div>
+                  <div class="text-4xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent mb-2">1000+</div>
                   <div class="text-sm text-gray-600 font-medium">精选诗词</div>
                 </div>
                 <div class="text-center">
@@ -439,6 +439,13 @@ const navigationLinks = [
   { text: '论语', href: '#' },
   { text: '诗经', href: '#' }
 ]
+
+const scrollToTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  })
+}
 </script>
 
 <style>

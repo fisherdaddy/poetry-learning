@@ -24,41 +24,53 @@
       <div class="max-w-4xl mx-auto">
         <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
           <!-- 标题区域 -->
-          <div class="bg-gradient-to-br from-blue-500 to-cyan-600 text-white p-8 text-center">
+          <div class="bg-gradient-to-br from-blue-500 to-cyan-600 text-white p-6 sm:p-8 text-center">
             <div class="flex flex-col items-center">
-              <div class="flex justify-center gap-8">
+              <!-- 修改标题布局，使其在移动端自动换行 -->
+              <div class="flex flex-wrap justify-center gap-x-6 gap-y-4 max-w-full px-4">
                 <div v-for="(char, charIndex) in titleWithPinyin"
                      :key="charIndex"
-                     class="flex flex-col items-center">
-                  <span class="text-sm text-white/80 font-sans mb-1">
+                     class="flex flex-col items-center"
+                     :class="{ 'hidden': char.isPunctuation }">
+                  <span class="text-xs sm:text-sm text-white/80 font-sans mb-1">
                     {{ char.pinyin }}
                   </span>
-                  <span class="text-3xl md:text-4xl font-kai">
+                  <span class="text-2xl sm:text-3xl md:text-4xl font-kai">
+                    {{ char.char }}
+                  </span>
+                </div>
+                <!-- 单独处理标点符号 -->
+                <div v-for="(char, charIndex) in titleWithPinyin"
+                     :key="`punct-${charIndex}`"
+                     class="flex items-end"
+                     :class="{ 'hidden': !char.isPunctuation }">
+                  <span class="text-2xl sm:text-3xl md:text-4xl font-kai mb-[0.2em]">
                     {{ char.char }}
                   </span>
                 </div>
               </div>
-              <p class="text-white/80 mt-3">{{ poem.dynasty }} · {{ poem.author }}</p>
+              <p class="text-white/80 mt-4 text-sm sm:text-base">{{ poem.dynasty }} · {{ poem.author }}</p>
             </div>
           </div>
 
-          <div class="p-6 md:p-8">
+          <div class="p-4 sm:p-6 md:p-8">
             <!-- 诗词内容 -->
-            <div class="text-center space-y-8 mb-8">
+            <div class="text-center space-y-6 sm:space-y-8 mb-8">
               <div v-for="(line, lineIndex) in poemWithPinyin" 
                    :key="lineIndex" 
-                   class="flex justify-center gap-6">
+                   class="flex flex-wrap justify-center gap-x-4 sm:gap-x-6 gap-y-2">
                 <div v-for="(char, charIndex) in line" 
                      :key="charIndex"
                      class="flex flex-col items-center"
                      :class="[
-                       { 'w-8': !char.isPunctuation },
+                       { 'w-6 sm:w-8': !char.isPunctuation },
                        char.isPunctuation ? 'self-end ml-[-0.5em] mb-[0.2em]' : ''
                      ]">
-                  <span v-if="!char.isPunctuation" class="text-xs text-gray-500 font-sans mb-1">
+                  <span v-if="!char.isPunctuation" 
+                        class="text-[10px] sm:text-xs text-gray-500 font-sans mb-1">
                     {{ char.pinyin }}
                   </span>
-                  <span class="text-lg md:text-xl text-gray-800 font-song"
+                  <span class="text-base sm:text-lg md:text-xl text-gray-800 font-song"
                         :class="{ 'mt-[1em]': char.isPunctuation }">
                     {{ char.char }}
                   </span>
@@ -162,16 +174,30 @@ const route = useRoute()
 const router = useRouter()
 const poem = ref(null)
 
-// 计算带拼音的诗词内容
-const poemWithPinyin = computed(() => {
-  if (!poem.value) return []
-  return poem.value.content.map(line => getPoemLinePinyin(line))
-})
+// 修改拼音处理逻辑，添加标点符号判断
+const isPunctuation = (char) => {
+  const punctuationRegex = /[\u3000-\u303F\uFF00-\uFFEF""'']/
+  return punctuationRegex.test(char)
+}
 
-// 添加标题拼音计算属性
+// 更新标题拼音计算属性
 const titleWithPinyin = computed(() => {
   if (!poem.value) return []
-  return getPoemLinePinyin(poem.value.title)
+  return getPoemLinePinyin(poem.value.title).map(char => ({
+    ...char,
+    isPunctuation: isPunctuation(char.char)
+  }))
+})
+
+// 更新诗词内容拼音计算属性
+const poemWithPinyin = computed(() => {
+  if (!poem.value) return []
+  return poem.value.content.map(line => 
+    getPoemLinePinyin(line).map(char => ({
+      ...char,
+      isPunctuation: isPunctuation(char.char)
+    }))
+  )
 })
 
 const poemWithExplanation = computed(() => {
@@ -201,5 +227,19 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* 可以添加自定义样式来微调拼音和汉字的对齐 */
+/* 添加一些辅助样式 */
+.title-char {
+  @apply flex flex-col items-center;
+  min-width: 1.5em; /* 确保每个字符有最小宽度 */
+}
+
+.pinyin-text {
+  @apply text-xs sm:text-sm text-white/80 font-sans mb-1;
+  word-break: keep-all; /* 防止拼音换行 */
+}
+
+.char-text {
+  @apply text-2xl sm:text-3xl md:text-4xl font-kai;
+  line-height: 1.2;
+}
 </style>

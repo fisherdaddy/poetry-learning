@@ -3,8 +3,8 @@ import { pinyin } from 'pinyin-pro'
 // 将单个汉字或标点转换为带声调的拼音
 export const getCharacterPinyin = (char) => {
   try {
-    // 如果是标点符号，返回空字符串
-    if (/[，。！？；：、]/.test(char)) {
+    // 扩展标点符号的判断范围，包含引号等
+    if (/[，。！？；：、""''「」『』（）\(\)“”‘’·]/.test(char)) {
       return ''
     }
     return pinyin(char, {
@@ -22,8 +22,9 @@ export const getCharacterPinyin = (char) => {
 export const getPoemLinePinyin = (line) => {
   return line.split('').map(char => ({
     char,
-    pinyin: getCharacterPinyin(char),
-    isPunctuation: /[，。！？；：、]/.test(char)
+    // 使用相同的标点符号判断规则
+    isPunctuation: /[，。！？；：、""''「」『』（）\(\)“”‘’·]/.test(char),
+    pinyin: getCharacterPinyin(char)
   }))
 }
 

@@ -5,11 +5,11 @@
       <div class="container mx-auto px-4">
         <div class="flex items-center h-16">
           <!-- Logo -->
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center shadow-lg">
-              <span class="text-2xl text-white font-bold font-kai">诗</span>
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center shadow-lg">
+              <span class="text-xl md:text-2xl text-white font-bold font-kai">诗</span>
             </div>
-            <span class="text-2xl font-kai font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+            <span class="text-lg md:text-2xl font-kai font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
               诗词启蒙
             </span>
           </div>
@@ -42,7 +42,8 @@
           <div class="flex-1"></div>
         
           <!-- Mobile Menu Button -->
-          <button class="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors">
+          <button class="md:hidden ml-auto p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                  @click="isMobileMenuOpen = !isMobileMenuOpen">
             <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
             </svg>
@@ -50,22 +51,23 @@
         </div>
       </div>
 
-      <!-- Mobile Menu (Hidden by default) -->
-      <div class="md:hidden hidden bg-white border-t border-gray-100">
+      <!-- Mobile Menu -->
+      <div class="md:hidden" :class="{ 'hidden': !isMobileMenuOpen }">
         <div class="container mx-auto px-4 py-2">
           <div class="flex flex-col gap-2">
-            <a href="#" class="px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors">唐诗</a>
-            <a href="#" class="px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors">宋词</a>
-            <a href="#" class="px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors">元曲</a>
-            <a href="#" class="px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors">论语</a>
-            <a href="#" class="px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors">诗经</a>
+            <a href="#" 
+               v-for="link in navigationLinks" 
+               :key="link.text"
+               class="px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors">
+              {{ link.text }}
+            </a>
           </div>
         </div>
       </div>
     </nav>
 
     <!-- Hero Section -->
-    <header class="relative pt-32 pb-20 lg:min-h-[90vh] flex items-center bg-gradient-to-br from-blue-100 to-cyan-50">
+    <header class="relative pt-24 md:pt-32 pb-16 md:pb-20 lg:min-h-[90vh] flex items-center bg-gradient-to-br from-blue-100 to-cyan-50">
       <!-- 背景装饰 -->
       <div class="absolute inset-0 overflow-hidden">
         <div class="absolute inset-0 bg-[url('/pattern.svg')] opacity-5"></div>
@@ -74,31 +76,32 @@
       
       <div class="container mx-auto px-4 relative z-10">
         <div class="max-w-7xl mx-auto">
-          <div class="grid lg:grid-cols-2 gap-16 items-center">
+          <div class="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
             <!-- 左侧内容 -->
-            <div class="text-center lg:text-left space-y-8">
-              <div class="space-y-6">
-                <h1 class="text-4xl sm:text-5xl lg:text-7xl font-kai tracking-wide leading-tight text-gray-800">
+            <div class="text-center lg:text-left space-y-6 md:space-y-8">
+              <div class="space-y-4 md:space-y-6">
+                <h1 class="text-3xl sm:text-4xl lg:text-7xl font-kai tracking-wide leading-tight text-gray-800">
                   让诗词之美 
                   <br/>
                   <span class="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
                     照亮孩子的未来
                   </span>
                 </h1>
-                <p class="text-xl lg:text-2xl text-gray-600 font-song max-w-2xl mx-auto lg:mx-0">
+                <p class="text-lg md:text-xl lg:text-2xl text-gray-600 font-song max-w-2xl mx-auto lg:mx-0">
                   专为2-18岁儿童设计的诗词学习平台
-                  <br/>
+                  <br class="hidden sm:block"/>
                   让传统文化的种子在年轻心灵中生根发芽
                 </p>
               </div>
               
-              <div class="flex flex-wrap justify-center lg:justify-start gap-6">
+              <!-- 按钮组 -->
+              <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 sm:gap-6">
                 <button 
                   @click="scrollToLevels"
-                  class="group px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl text-white font-medium shadow-xl shadow-blue-500/25 hover:shadow-2xl hover:shadow-blue-500/40 transition-all duration-300 transform hover:-translate-y-0.5"
+                  class="group px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl text-white font-medium shadow-xl shadow-blue-500/25 hover:shadow-2xl hover:shadow-blue-500/40 transition-all duration-300 transform hover:-translate-y-0.5"
                 >
-                  <div class="flex items-center gap-3">
-                    <span class="text-lg">开启学习之旅</span>
+                  <div class="flex items-center justify-center gap-3">
+                    <span class="text-base sm:text-lg">开启学习之旅</span>
                     <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
                     </svg>
@@ -106,14 +109,14 @@
                 </button>
                 <button 
                   @click="goToFeatures"
-                  class="px-8 py-4 border-2 border-blue-200 text-blue-600 rounded-xl hover:bg-blue-50 transition-all duration-300 text-lg font-medium"
+                  class="px-6 sm:px-8 py-3 sm:py-4 border-2 border-blue-200 text-blue-600 rounded-xl hover:bg-blue-50 transition-all duration-300 text-base sm:text-lg font-medium"
                 >
                   了解教学方法
                 </button>
               </div>
 
               <!-- 数据统计 -->
-              <div class="grid grid-cols-3 gap-8 pt-12 border-t border-blue-100">
+              <div class="grid grid-cols-3 gap-4 sm:gap-8 pt-8 sm:pt-12 border-t border-blue-100">
                 <div class="text-center">
                   <div class="text-4xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent mb-2">4级</div>
                   <div class="text-sm text-gray-600 font-medium">难度等级</div>
@@ -129,7 +132,7 @@
               </div>
             </div>
 
-            <!-- 右侧装饰 -->
+            <!-- 右侧装饰 - 在移动端隐藏 -->
             <div class="hidden lg:block relative">
               <div class="absolute -inset-4 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 blur-3xl"></div>
               <div class="relative">
@@ -150,17 +153,15 @@
     </header>
 
     <!-- Features Section -->
-    <section id="features" class="py-20 bg-gradient-to-br from-white to-blue-50/50">
+    <section id="features" class="py-12 md:py-20 bg-gradient-to-br from-white to-blue-50/50 scroll-mt-16">
       <div class="container mx-auto px-4">
         <div class="max-w-7xl mx-auto">
-          <!-- 标题部分 -->
-          <div class="text-center mb-16">
-            <h2 class="text-4xl font-kai mb-4 text-gray-900">学习特色</h2>
-            <p class="text-gray-600 max-w-2xl mx-auto">专业的教学设计，让孩子轻松掌握诗词之美</p>
+          <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-kai mb-4 text-gray-900">学习特色</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto px-4">专业的教学设计，让孩子轻松掌握诗词之美</p>
           </div>
           
-          <!-- 特色卡片 -->
-          <div class="grid md:grid-cols-3 gap-8 lg:gap-12">
+          <div class="grid md:grid-cols-3 gap-6 lg:gap-12">
             <div class="group bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100">
               <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center mb-6 text-2xl text-white shadow-lg group-hover:scale-110 transition-transform duration-500">
                 📚
@@ -270,7 +271,7 @@
 
       <!-- 内容区域 -->
       <div class="container mx-auto px-4 text-center max-w-4xl relative z-10">
-        <h2 class="text-4xl lg:text-6xl font-kai mb-8 lg:mb-10 text-white">开启诗词学习之旅</h2>
+        <h2 class="text-4xl lg:text-6xl font-kai mb-8 lg:mb-10 text-white">开启古诗词学习之旅</h2>
         <p class="text-xl lg:text-2xl text-white/90 mb-10 lg:mb-14 font-light">让我们一起探索中国诗词的无穷魅力</p>
         <button @click="goToLevel(1)" 
                 class="px-10 py-4 bg-white/95 text-blue-600 rounded-2xl text-lg font-medium 
@@ -428,6 +429,16 @@ const goToFeatures = () => {
     behavior: 'smooth'
   })
 }
+
+const isMobileMenuOpen = ref(false)
+
+const navigationLinks = [
+  { text: '唐诗', href: '#' },
+  { text: '宋词', href: '#' },
+  { text: '元曲', href: '#' },
+  { text: '论语', href: '#' },
+  { text: '诗经', href: '#' }
+]
 </script>
 
 <style>

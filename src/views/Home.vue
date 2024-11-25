@@ -362,7 +362,7 @@ const levels = ref([
       '意境优美，贴近生活',
       '耳熟能详，易于记忆'
     ],
-    poemCount: 100
+    poemCount: 22
   },
   {
     id: 2,
@@ -375,7 +375,7 @@ const levels = ref([
       '意境深远，情感真挚',
       '重点讲解，理解诗意'
     ],
-    poemCount: 100
+    poemCount: 115
   },
   {
     id: 3,
@@ -388,7 +388,7 @@ const levels = ref([
       '意境高远，情感丰富',
       '深入赏析，品味诗词'
     ],
-    poemCount: 100
+    poemCount: 474
   },
   {
     id: 4,
@@ -401,7 +401,7 @@ const levels = ref([
       '艺术精湛，意境深远',
       '系统赏析，文化传承'
     ],
-    poemCount: 100
+    poemCount: 474
   }
 ])
 

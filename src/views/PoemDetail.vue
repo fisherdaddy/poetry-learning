@@ -77,6 +77,47 @@
 
             <!-- 注释和赏析 -->
             <div class="space-y-6">
+              <!-- 主旨含义部分 -->
+              <div v-if="poem.theme" class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-6">
+                <h2 class="text-lg font-medium text-blue-900 mb-4 flex items-center">
+                  <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                  </svg>
+                  主旨含义
+                </h2>
+                <p class="text-gray-600 leading-relaxed">{{ poem.theme }}</p>
+              </div>
+
+              <!-- 写作背景部分 -->
+              <div v-if="poem.background" class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-6">
+                <h2 class="text-lg font-medium text-blue-900 mb-4 flex items-center">
+                  <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                  写作背景
+                </h2>
+                <p class="text-gray-600 leading-relaxed">{{ poem.background }}</p>
+              </div>
+
+              <!-- 白话解释部分 -->
+              <div v-if="poem.explanation" class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-6">
+                <h2 class="text-lg font-medium text-blue-900 mb-4 flex items-center">
+                  <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                  </svg>
+                  白话解释
+                </h2>
+                <div class="space-y-3">
+                  <div v-for="(line, index) in poemWithExplanation" 
+                       :key="index" 
+                       class="flex flex-col sm:flex-row sm:items-start gap-4 pb-3"
+                       :class="{'border-b border-blue-100/60': index !== poemWithExplanation.length - 1}">
+                    <div class="text-gray-800 font-song sm:w-1/3 text-lg">{{ line.original }}</div>
+                    <div class="text-gray-600 sm:w-2/3 sm:pl-4 sm:border-l border-blue-100">{{ line.explanation }}</div>
+                  </div>
+                </div>
+              </div>
+
               <div v-if="poem.translation" class="bg-gray-50/50 rounded-xl p-6">
                 <h2 class="text-lg font-bold text-gray-900 mb-3">译文</h2>
                 <p class="text-gray-600 leading-relaxed">{{ poem.translation }}</p>
@@ -85,11 +126,6 @@
               <div v-if="poem.appreciation" class="bg-gray-50/50 rounded-xl p-6">
                 <h2 class="text-lg font-bold text-gray-900 mb-3">赏析</h2>
                 <p class="text-gray-600 leading-relaxed">{{ poem.appreciation }}</p>
-              </div>
-
-              <div v-if="poem.background" class="bg-gray-50/50 rounded-xl p-6">
-                <h2 class="text-lg font-bold text-gray-900 mb-3">创作背景</h2>
-                <p class="text-gray-600 leading-relaxed">{{ poem.background }}</p>
               </div>
 
               <div v-if="poem.annotation" class="bg-gray-50/50 rounded-xl p-6">
@@ -136,6 +172,14 @@ const poemWithPinyin = computed(() => {
 const titleWithPinyin = computed(() => {
   if (!poem.value) return []
   return getPoemLinePinyin(poem.value.title)
+})
+
+const poemWithExplanation = computed(() => {
+  if (!poem.value || !poem.value.explanation) return []
+  return poem.value.content.map((line, index) => ({
+    original: line,
+    explanation: poem.value.explanation[index]
+  }))
 })
 
 const goBack = () => {

@@ -1,8 +1,12 @@
 import { pinyin } from 'pinyin-pro'
 
-// 将单个汉字转换为带声调的拼音
+// 将单个汉字或标点转换为带声调的拼音
 export const getCharacterPinyin = (char) => {
   try {
+    // 如果是标点符号，返回空字符串
+    if (/[，。！？；：、]/.test(char)) {
+      return ''
+    }
     return pinyin(char, {
       toneType: 'symbol',    // 使用声调符号
       type: 'array',
@@ -18,7 +22,8 @@ export const getCharacterPinyin = (char) => {
 export const getPoemLinePinyin = (line) => {
   return line.split('').map(char => ({
     char,
-    pinyin: getCharacterPinyin(char)
+    pinyin: getCharacterPinyin(char),
+    isPunctuation: /[，。！？；：、]/.test(char)
   }))
 }
 

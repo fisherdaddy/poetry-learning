@@ -50,11 +50,16 @@
                    class="flex justify-center gap-6">
                 <div v-for="(char, charIndex) in line" 
                      :key="charIndex"
-                     class="flex flex-col items-center w-8">
-                  <span class="text-xs text-gray-500 font-sans mb-1">
+                     class="flex flex-col items-center"
+                     :class="[
+                       { 'w-8': !char.isPunctuation },
+                       char.isPunctuation ? 'self-end ml-[-0.5em] mb-[0.2em]' : ''
+                     ]">
+                  <span v-if="!char.isPunctuation" class="text-xs text-gray-500 font-sans mb-1">
                     {{ char.pinyin }}
                   </span>
-                  <span class="text-lg md:text-xl text-gray-800 font-song">
+                  <span class="text-lg md:text-xl text-gray-800 font-song"
+                        :class="{ 'mt-[1em]': char.isPunctuation }">
                     {{ char.char }}
                   </span>
                 </div>

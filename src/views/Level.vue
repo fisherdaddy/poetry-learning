@@ -79,6 +79,7 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { poemsData } from '../data/poems/index'
+import { trackEvent } from '../utils/analytics'
 
 const route = useRoute()
 const router = useRouter()
@@ -125,6 +126,11 @@ const poems = computed(() => {
 })
 
 const goToPoemDetail = (poem) => {
+  trackEvent('poem_click', {
+    poem_id: poem.id,
+    poem_title: poem.title,
+    level: level.value
+  })
   router.push(`/poem/${poem.slug}`)
 }
 </script>

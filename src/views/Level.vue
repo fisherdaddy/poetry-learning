@@ -124,7 +124,13 @@ const levelInfo = computed(() => {
 
 // 计算当前级别的诗词列表
 const poems = computed(() => {
-  return poemsData[level.value] || []
+  const levelPoems = poemsData[level.value] || []
+  return levelPoems.map((poem, index) => ({
+    ...poem,
+    id: index,
+    // 添加诗词类型标识
+    type: poem.type || 'level'  // 使用 poem 中的 type 字段，如果没有则默认为 'level'
+  }))
 })
 
 const goToPoemDetail = (poem) => {
@@ -133,9 +139,16 @@ const goToPoemDetail = (poem) => {
     poem_title: poem.title,
     level: level.value
   })
+  
+  // 使用 level 作为类型前缀
+  const prefix = 'level'
+  
   router.push({
-    path: `/poem/${poem.slug}`,
-    query: { from: `level/${level.value}` }
+    path: `/poem/${prefix}-${level.value}-${poem.id}`,
+    query: { 
+      from: `level/${level.value}`,
+      type: 'level'
+    }
   })
 }
 

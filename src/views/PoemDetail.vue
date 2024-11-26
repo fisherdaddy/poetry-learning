@@ -169,17 +169,111 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { getAllPoems } from '../data/poems/index'
-import tangshiData from '../data/all/tangshi.json'
-import songciData from '../data/all/songci.json'
-import yuanquData from '../data/all/yuanqu.json'
-import shijingData from '../data/all/shijing.json'
-import lunyuData from '../data/all/lunyu.json'
 import { getPoemLinePinyin } from '../utils/pinyin'
+import { poemsData } from '../data/poems/index'
 
 const route = useRoute()
 const router = useRouter()
 const poem = ref(null)
+
+// 动态导入数据的函数
+const getDataByType = async (type) => {
+  try {
+    switch (type) {
+      case 'tangshi':
+        return (await import('../data/all/tangshi.json')).default
+      case 'songci':
+        return (await import('../data/all/songci.json')).default
+      case 'yuanqu':
+        return (await import('../data/all/yuanqu.json')).default
+      case 'shijing':
+        return (await import('../data/all/shijing.json')).default
+      case 'lunyu':
+        return (await import('../data/all/lunyu.json')).default
+      default:
+        return null
+    }
+  } catch (error) {
+    console.error('Error loading poem data:', error)
+    return null
+  }
+}
+
+// 获取诗词数据
+const getPoem = async () => {
+  const poemId = route.params.id
+  const [prefix, ...rest] = poemId.split('-')
+  
+  try {
+    if (prefix === 'level') {
+      // 处理来自 level 页面的诗词
+      const levelId = rest[0]
+      const poemIndex = parseInt(rest[1])
+      const levelPoems = poemsData[levelId] || []
+      const poemData = levelPoems[poemIndex]
+      
+      if (poemData) {
+        return {
+          ...poemData,
+          slug: poemId,
+          theme: poemData.theme || null,
+          background: poemData.background || null,
+          translation: poemData.translation || null,
+          appreciation: poemData.appreciation || null,
+          annotation: poemData.annotation || null,
+          explanation: poemData.explanation || null
+        }
+      }
+    } else {
+      // 处理其他来源的诗词（原有的逻辑）
+      const data = await getDataByType(prefix)
+      if (!data) {
+        console.error('Invalid poem type:', prefix)
+        router.push('/')
+        return
+      }
+
+      const index = parseInt(rest[0])
+      const poemData = data[index]
+      
+      if (poemData) {
+        return {
+          ...poemData,
+          slug: poemId,
+          theme: poemData.theme || null,
+          background: poemData.background || null,
+          translation: poemData.translation || null,
+          appreciation: poemData.appreciation || null,
+          annotation: poemData.annotation || null,
+          explanation: poemData.explanation || null
+        }
+      }
+    }
+    
+    return null
+  } catch (error) {
+    console.error('Error getting poem:', error)
+    return null
+  }
+}
+
+onMounted(async () => {
+  // 将页面滚动到顶部
+  window.scrollTo(0, 0)
+  
+  try {
+    const poemData = await getPoem()
+    if (poemData) {
+      poem.value = poemData
+    } else {
+      console.error('Poem not found:', route.params.id)
+      router.push('/')
+    }
+  } catch (error) {
+    console.error('Error loading poem:', error)
+    router.push('/')
+  }
+})
 
 // 修改拼音处理逻辑，添加标点符号判断
 const isPunctuation = (char) => {
@@ -215,108 +309,20 @@ const poemWithExplanation = computed(() => {
   }))
 })
 
-// 获取诗词数据
-const getPoem = () => {
-  const slug = route.params.slug
-  const [type, index] = slug.split('-')
-  let data = []
-  
-  // 根据类型选择对应的数据源
-  switch (type) {
-    case 'tangshi':
-      data = tangshiData
-      break
-    case 'songci':
-      data = songciData
-      break
-    case 'yuanqu':
-      data = yuanquData
-      break
-    case 'shijing':
-      data = shijingData
-      break
-    case 'lunyu':
-      data = lunyuData
-      break
-  }
-
-  return data[parseInt(index)]
-}
-
 // 修改返回上一页的逻辑
 const goBack = () => {
-  // 使用 route.query.from 来确定返回路径
   const fromPath = route.query.from
   if (fromPath) {
-    router.push(`/${fromPath}`)
+    // 检查是否来自 level 页面
+    if (fromPath.startsWith('level/')) {
+      router.push(`/${fromPath}`)
+    } else {
+      router.push(`/${fromPath}`)
+    }
   } else {
-    // 如果没有来源信息，返回首页
     router.push('/')
   }
 }
-
-onMounted(() => {
-  // 将页面滚动到顶部
-  window.scrollTo(0, 0)
-  
-  const poemId = route.params.id
-  const [prefix, id] = poemId.split('-')
-  
-  let poemData
-  let data
-  
-  // 根据前缀选择对应的数据源
-  if (poemId.includes('level-')) {
-    // 处理从 level 页面跳转的情况
-    const level = poemId.split('level-')[1].split('-')[0]
-    data = poemsData[level] || []
-    poemData = data.find(p => p.slug === poemId)
-  } else {
-    // 处理从分类页面跳转的情况
-    switch (prefix) {
-      case 'tangshi':
-        data = tangshiData
-        break
-      case 'songci':
-        data = songciData
-        break
-      case 'yuanqu':
-        data = yuanquData
-        break
-      case 'shijing':
-        data = shijingData
-        break
-      case 'lunyu':
-        data = lunyuData
-        break
-      default:
-        data = getAllPoems()
-        break
-    }
-    
-    const index = parseInt(id)
-    poemData = data[index]
-    if (poemData) {
-      poemData = {
-        ...poemData,
-        slug: `${prefix}-${index}`,
-        theme: poemData.theme || null,
-        background: poemData.background || null,
-        translation: poemData.translation || null,
-        appreciation: poemData.appreciation || null,
-        annotation: poemData.annotation || null,
-        explanation: poemData.explanation || null
-      }
-    }
-  }
-  
-  if (poemData) {
-    poem.value = poemData
-  } else {
-    console.error('Poem not found:', poemId)
-    router.push('/')
-  }
-})
 </script>
 
 <style scoped>

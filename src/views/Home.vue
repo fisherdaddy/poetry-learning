@@ -16,6 +16,13 @@
         
           <!-- Navigation Links - Desktop -->
           <div class="hidden md:flex items-center ml-16 space-x-8">
+            <a 
+              href="#"
+              @click.prevent="scrollToLevels"
+              class="text-gray-600 hover:text-blue-600 font-medium transition-colors relative group py-2 cursor-pointer">
+              古诗分级
+              <span class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
+            </a>
             <router-link 
               to="/tangshi"
               class="text-gray-600 hover:text-blue-600 font-medium transition-colors relative group py-2">
@@ -74,6 +81,13 @@
             >
               {{ link.text }}
             </router-link>
+            <a 
+              href="#"
+              @click.prevent="scrollToLevels"
+              class="px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer"
+            >
+              分级
+            </a>
           </div>
         </div>
       </div>
@@ -336,7 +350,7 @@
           </div>
         </div>
         <div class="text-center text-gray-600 mt-8 pt-8 border-t border-gray-200">
-          <p>传承文化，诗意人生 © 2024</p>
+          <p>传承文化，诗意人生 2024</p>
         </div>
       </div>
     </footer>
@@ -450,7 +464,8 @@ const navigationLinks = [
   { text: '宋词', path: '/songci' },
   { text: '元曲', path: '/yuanqu' },
   { text: '论语', path: '/lunyu' },
-  { text: '诗经', path: '/shijing' }
+  { text: '诗经', path: '/shijing' },
+  { text: '分级', path: '#', action: scrollToLevels },
 ]
 
 const scrollToTop = () => {

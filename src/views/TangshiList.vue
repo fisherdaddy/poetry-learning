@@ -49,12 +49,40 @@
         <div class="mb-8">
           <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">{{ getTitle }}</h1>
           <p class="text-sm sm:text-base text-gray-600">
-            共收录 {{ filteredPoems.length }} 首{{ getTitle.slice(0, 2) }}
+            <template v-if="!isLoading">
+              共收录 {{ filteredPoems.length }} 首{{ getTitle.slice(0, 2) }}
+            </template>
+            <template v-else>
+              <span class="inline-block w-24 h-4 bg-gray-200 rounded animate-pulse"></span>
+            </template>
           </p>
         </div>
         
-        <!-- 诗词列表 -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+        <!-- 加载状态显示 -->
+        <div v-if="isLoading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+          <div v-for="n in 8" :key="n" class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+            <!-- 骨架屏 -->
+            <div class="bg-gray-100 p-4 sm:p-6">
+              <div class="flex flex-col items-center space-y-2">
+                <div class="w-32 h-6 bg-gray-200 rounded animate-pulse"></div>
+                <div class="w-24 h-4 bg-gray-200 rounded animate-pulse"></div>
+              </div>
+            </div>
+            <div class="p-4">
+              <div class="space-y-2">
+                <div class="w-full h-4 bg-gray-100 rounded animate-pulse"></div>
+                <div class="w-2/3 h-4 bg-gray-100 rounded animate-pulse"></div>
+              </div>
+              <div class="mt-3 flex gap-2">
+                <div class="w-12 h-6 bg-gray-100 rounded-full animate-pulse"></div>
+                <div class="w-12 h-6 bg-gray-100 rounded-full animate-pulse"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 诗词列表 - 仅在加载完成后显示 -->
+        <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
           <div v-for="poem in paginatedPoems"
                :key="poem.id"
                class="group bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden cursor-pointer transform hover:-translate-y-1 border border-gray-100"
@@ -85,8 +113,8 @@
           </div>
         </div>
 
-        <!-- 分页控件 -->
-        <div class="mt-8 flex justify-center">
+        <!-- 分页控件 - 仅在加载完成且有数据时显示 -->
+        <div v-if="!isLoading && filteredPoems.length > 0" class="mt-8 flex justify-center">
           <div class="flex gap-2">
             <button 
               @click="currentPage--"
@@ -109,6 +137,14 @@
             >
               下一页
             </button>
+          </div>
+        </div>
+
+        <!-- 无数据提示 -->
+        <div v-if="!isLoading && filteredPoems.length === 0" 
+             class="text-center py-12">
+          <div class="text-gray-500">
+            未找到相关诗词
           </div>
         </div>
       </div>
@@ -136,6 +172,9 @@ const getCurrentData = computed(() => poemsData.value)
 const loadData = async () => {
   isLoading.value = true
   try {
+    // 创建一个延时 Promise
+    const delay = new Promise(resolve => setTimeout(resolve, 500))
+    
     let data
     if (route.path.includes('tangshi')) {
       data = await import('../data/all/tangshi.json')
@@ -150,6 +189,9 @@ const loadData = async () => {
     } else {
       data = await import('../data/all/tangshi.json')
     }
+    
+    // 等待数据加载和最小延时都完成
+    await Promise.all([delay])
     poemsData.value = data.default
   } catch (error) {
     console.error('Failed to load data:', error)

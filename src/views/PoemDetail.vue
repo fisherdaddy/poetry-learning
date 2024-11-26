@@ -49,7 +49,9 @@
                   </span>
                 </div>
               </div>
-              <p class="text-white/80 mt-4 text-sm sm:text-base">{{ poem.dynasty }} · {{ poem.author }}</p>
+              <p v-if="poem.dynasty || poem.author" class="text-white/80 mt-4 text-sm sm:text-base">
+                {{ [poem.dynasty, poem.author].filter(Boolean).join(' · ') }}
+              </p>
             </div>
           </div>
 
@@ -168,6 +170,11 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getAllPoems } from '../data/poems/index'
+import tangshiData from '../data/all/tangshi.json'
+import songciData from '../data/all/songci.json'
+import yuanquData from '../data/all/yuanqu.json'
+import shijingData from '../data/all/shijing.json'
+import lunyuData from '../data/all/lunyu.json'
 import { getPoemLinePinyin } from '../utils/pinyin'
 
 const route = useRoute()
@@ -208,14 +215,100 @@ const poemWithExplanation = computed(() => {
   }))
 })
 
+// 获取诗词数据
+const getPoem = () => {
+  const slug = route.params.slug
+  const [type, index] = slug.split('-')
+  let data = []
+  
+  // 根据类型选择对应的数据源
+  switch (type) {
+    case 'tangshi':
+      data = tangshiData
+      break
+    case 'songci':
+      data = songciData
+      break
+    case 'yuanqu':
+      data = yuanquData
+      break
+    case 'shijing':
+      data = shijingData
+      break
+    case 'lunyu':
+      data = lunyuData
+      break
+  }
+
+  return data[parseInt(index)]
+}
+
+// 修改返回上一页的逻辑
 const goBack = () => {
-  const level = route.params.id.split('-')[0]
-  router.push(`/level/${level}`)
+  // 使用 route.query.from 来确定返回路径
+  const fromPath = route.query.from
+  if (fromPath) {
+    router.push(`/${fromPath}`)
+  } else {
+    // 如果没有来源信息，返回首页
+    router.push('/')
+  }
 }
 
 onMounted(() => {
+  // 将页面滚动到顶部
+  window.scrollTo(0, 0)
+  
   const poemId = route.params.id
-  const poemData = getAllPoems().find(p => p.slug === poemId)
+  const [prefix, id] = poemId.split('-')
+  
+  let poemData
+  let data
+  
+  // 根据前缀选择对应的数据源
+  if (poemId.includes('level-')) {
+    // 处理从 level 页面跳转的情况
+    const level = poemId.split('level-')[1].split('-')[0]
+    data = poemsData[level] || []
+    poemData = data.find(p => p.slug === poemId)
+  } else {
+    // 处理从分类页面跳转的情况
+    switch (prefix) {
+      case 'tangshi':
+        data = tangshiData
+        break
+      case 'songci':
+        data = songciData
+        break
+      case 'yuanqu':
+        data = yuanquData
+        break
+      case 'shijing':
+        data = shijingData
+        break
+      case 'lunyu':
+        data = lunyuData
+        break
+      default:
+        data = getAllPoems()
+        break
+    }
+    
+    const index = parseInt(id)
+    poemData = data[index]
+    if (poemData) {
+      poemData = {
+        ...poemData,
+        slug: `${prefix}-${index}`,
+        theme: poemData.theme || null,
+        background: poemData.background || null,
+        translation: poemData.translation || null,
+        appreciation: poemData.appreciation || null,
+        annotation: poemData.annotation || null,
+        explanation: poemData.explanation || null
+      }
+    }
+  }
   
   if (poemData) {
     poem.value = poemData

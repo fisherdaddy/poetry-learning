@@ -16,26 +16,36 @@
         
           <!-- Navigation Links - Desktop -->
           <div class="hidden md:flex items-center ml-16 space-x-8">
-            <a href="#" class="text-gray-600 hover:text-blue-600 font-medium transition-colors relative group py-2">
+            <router-link 
+              to="/tangshi"
+              class="text-gray-600 hover:text-blue-600 font-medium transition-colors relative group py-2">
               唐诗
               <span class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
-            </a>
-            <a href="#" class="text-gray-600 hover:text-blue-600 font-medium transition-colors relative group py-2">
+            </router-link>
+            <router-link 
+              to="/songci"
+              class="text-gray-600 hover:text-blue-600 font-medium transition-colors relative group py-2">
               宋词
               <span class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
-            </a>
-            <a href="#" class="text-gray-600 hover:text-blue-600 font-medium transition-colors relative group py-2">
+            </router-link>
+            <router-link 
+              to="/yuanqu"
+              class="text-gray-600 hover:text-blue-600 font-medium transition-colors relative group py-2">
               元曲
               <span class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
-            </a>
-            <a href="#" class="text-gray-600 hover:text-blue-600 font-medium transition-colors relative group py-2">
+            </router-link>
+            <router-link 
+              to="/lunyu"
+              class="text-gray-600 hover:text-blue-600 font-medium transition-colors relative group py-2">
               论语
               <span class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
-            </a>
-            <a href="#" class="text-gray-600 hover:text-blue-600 font-medium transition-colors relative group py-2">
+            </router-link>
+            <router-link 
+              to="/shijing"
+              class="text-gray-600 hover:text-blue-600 font-medium transition-colors relative group py-2">
               诗经
               <span class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
-            </a>
+            </router-link>
           </div>
 
           <!-- 右侧空白占位，保持导航居中 -->
@@ -55,12 +65,15 @@
       <div class="md:hidden" :class="{ 'hidden': !isMobileMenuOpen }">
         <div class="container mx-auto px-4 py-2">
           <div class="flex flex-col gap-2">
-            <a href="#" 
-               v-for="link in navigationLinks" 
-               :key="link.text"
-               class="px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors">
+            <router-link 
+              v-for="link in navigationLinks" 
+              :key="link.path"
+              :to="link.path"
+              class="px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
+              @click="isMobileMenuOpen = false"
+            >
               {{ link.text }}
-            </a>
+            </router-link>
           </div>
         </div>
       </div>
@@ -338,7 +351,7 @@ import { useHead } from '@vueuse/head'
 const router = useRouter()
 
 useHead({
-  title: '诗词启蒙 - 儿童古诗词学习平台',
+  title: '诗词启蒙 - 儿童古诗��学习平台',
   meta: [
     {
       name: 'description',
@@ -368,7 +381,7 @@ const levels = ref([
   {
     id: 2,
     name: '小学级（7-12岁）',
-    description: '进阶学习较长篇幅的诗词，如《游子吟》《江南春》《望天门山》等，加深对诗词的理解。',
+    description: '进阶学习较长篇幅的诗词，如《游子吟》《江南春》《望天门山》等，加深诗词的理解。',
     ageRange: '7-12岁',
     image: '/images/level2.svg',
     features: [
@@ -433,11 +446,11 @@ const goToFeatures = () => {
 const isMobileMenuOpen = ref(false)
 
 const navigationLinks = [
-  { text: '唐诗', href: '#' },
-  { text: '宋词', href: '#' },
-  { text: '元曲', href: '#' },
-  { text: '论语', href: '#' },
-  { text: '诗经', href: '#' }
+  { text: '唐诗', path: '/tangshi' },
+  { text: '宋词', path: '/songci' },
+  { text: '元曲', path: '/yuanqu' },
+  { text: '论语', path: '/lunyu' },
+  { text: '诗经', path: '/shijing' }
 ]
 
 const scrollToTop = () => {

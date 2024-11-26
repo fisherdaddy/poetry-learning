@@ -50,3 +50,7 @@ npm run build
 ## 许可证
 
 This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
+
+## 致谢
+
+部分数据来自于开源项目 [chinese-poetry](https://github.com/chinese-poetry/chinese-poetry)，感谢原作者的贡献。

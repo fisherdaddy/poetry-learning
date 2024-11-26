@@ -18,10 +18,10 @@ const processPoems = (poems) => {
 
 // 整理所有诗词数据
 export const poemsData = {
-  '1': processPoems([...level1Basic.poems, ...level1Advanced.poems]),
-  '2': processPoems([...level2Basic.poems, ...level2Advanced.poems]),
-  '3': processPoems([...level3Basic.poems, ...level3Advanced.poems]),
-  '4': processPoems([...level4Basic.poems, ...level4Advanced.poems])
+  '1': processPoems([...level1Basic, ...level1Advanced]),
+  '2': processPoems([...level2Basic, ...level2Advanced]),
+  '3': processPoems([...level3Basic, ...level3Advanced]),
+  '4': processPoems([...level4Basic, ...level4Advanced])
 }
 
 // 获取单个诗词的函数

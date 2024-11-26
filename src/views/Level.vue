@@ -78,7 +78,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { poemsData } from '../data/poems/index'
 import { trackEvent } from '../utils/analytics'
@@ -133,8 +133,16 @@ const goToPoemDetail = (poem) => {
     poem_title: poem.title,
     level: level.value
   })
-  router.push(`/poem/${poem.slug}`)
+  router.push({
+    path: `/poem/${poem.slug}`,
+    query: { from: `level/${level.value}` }
+  })
 }
+
+onMounted(() => {
+  // 将页面滚动到顶部
+  window.scrollTo(0, 0)
+})
 </script>
 
 <style scoped>

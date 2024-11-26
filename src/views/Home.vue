@@ -351,7 +351,7 @@ import { useHead } from '@vueuse/head'
 const router = useRouter()
 
 useHead({
-  title: '诗词启蒙 - 儿童古诗��学习平台',
+  title: '诗词启蒙 - 儿童古诗学习平台',
   meta: [
     {
       name: 'description',

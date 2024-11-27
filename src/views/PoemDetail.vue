@@ -78,10 +78,82 @@
                   </span>
                 </div>
               </div>
+
+              <!-- 新增视频展示区域 -->
+              <div v-if="poem.video" class="mt-12 mb-12">
+                <div class="relative max-w-4xl mx-auto rounded-xl overflow-hidden shadow-xl bg-gradient-to-br from-blue-500/5 to-cyan-500/5 p-6">
+                  <!-- 视频标题和描述 -->
+                  <div class="mb-6 text-center">
+                    <h3 class="text-lg font-medium text-blue-900 mb-2 flex items-center justify-center">
+                      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      诗词意境
+                    </h3>
+                    <p class="text-gray-600 text-sm">沉浸式体验诗词意境</p>
+                  </div>
+
+                  <!-- 视频播放器容器 -->
+                  <div class="relative aspect-video rounded-lg overflow-hidden group">
+                    <!-- 视频播放器 -->
+                    <video
+                      ref="videoPlayer"
+                      :src="poem.video"
+                      class="w-full h-full object-cover"
+                      :class="{ 'cursor-pointer': !isPlaying }"
+                      @click="toggleVideo"
+                      :poster="poem.image"
+                      preload="metadata"
+                    ></video>
+
+                    <!-- 视频控制层 -->
+                    <div 
+                      class="absolute inset-0 bg-black/30 flex items-center justify-center transition-opacity duration-300"
+                      :class="{ 'opacity-0': isPlaying && !isHoveringVideo, 'group-hover:opacity-100': true }"
+                      @mouseenter="isHoveringVideo = true"
+                      @mouseleave="isHoveringVideo = false"
+                    >
+                      <!-- 播放/暂停按钮 -->
+                      <button 
+                        class="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center transition-transform duration-300 hover:scale-110"
+                        @click="toggleVideo"
+                      >
+                        <svg 
+                          v-if="!isPlaying"
+                          class="w-8 h-8 text-white" 
+                          fill="currentColor" 
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M8 5v14l11-7z" />
+                        </svg>
+                        <svg 
+                          v-else
+                          class="w-8 h-8 text-white" 
+                          fill="currentColor" 
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- 视频进度条 -->
+                  <div class="mt-4 px-2">
+                    <div class="relative h-1 bg-gray-200 rounded-full overflow-hidden">
+                      <div 
+                        class="absolute left-0 top-0 h-full bg-blue-500 transition-all duration-300"
+                        :style="{ width: `${videoProgress}%` }"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <!-- 添加新的图片展示位置 -->
-            <div v-if="poem.image" class="mb-8">
+            <!-- 修改图片展示区域的条件 -->
+            <div v-if="poem.image && !poem.video" class="mb-8">
               <div class="max-w-2xl mx-auto overflow-hidden rounded-xl shadow-lg">
                 <div class="relative group">
                   <img 
@@ -201,7 +273,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getPoemLinePinyin } from '../utils/pinyin'
 import { poemsData } from '../data/poems/index'
@@ -212,6 +284,50 @@ const poem = ref(null)
 
 // 添加图片预览状态控制
 const showFullImage = ref(false)
+
+// 在 script setup 中添加以下代码
+const videoPlayer = ref(null)
+const isPlaying = ref(false)
+const isHoveringVideo = ref(false)
+const videoProgress = ref(0)
+
+// 视频控制函数
+const toggleVideo = () => {
+  if (!videoPlayer.value) return
+  
+  if (videoPlayer.value.paused) {
+    videoPlayer.value.play()
+    isPlaying.value = true
+  } else {
+    videoPlayer.value.pause()
+    isPlaying.value = false
+  }
+}
+
+// 监听视频进度
+const updateVideoProgress = () => {
+  if (!videoPlayer.value) return
+  const progress = (videoPlayer.value.currentTime / videoPlayer.value.duration) * 100
+  videoProgress.value = progress
+}
+
+// 在组件挂载时添加视频事件监听
+onMounted(() => {
+  if (videoPlayer.value) {
+    videoPlayer.value.addEventListener('timeupdate', updateVideoProgress)
+    videoPlayer.value.addEventListener('ended', () => {
+      isPlaying.value = false
+      videoProgress.value = 0
+    })
+  }
+})
+
+// 在组件卸载时移除事件监听
+onUnmounted(() => {
+  if (videoPlayer.value) {
+    videoPlayer.value.removeEventListener('timeupdate', updateVideoProgress)
+  }
+})
 
 // 动态导入数据的函数
 const getDataByType = async (type) => {

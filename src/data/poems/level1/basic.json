@@ -14,7 +14,8 @@
     ],
     "background": "这首诗作于李白任翰林学士时期。当时他远离家乡，独自在长安为官。一个明月皎洁的夜晚，诗人独自在宫中值夜，看到明亮的月光照在地上，思念之情便油然而生。",
     "theme": "这首诗以月为媒，抒发了诗人思乡怀远的深切感情。全诗构思精巧，语言清新自然，意境优美，把思乡的愁绪写得委婉含蓄而又情真意切，让人感同身受。",
-    "image": "/images/poems/jingyesi.webp"
+    "image": "/images/poems/jingyesi.webp",
+    "video": "/videos/poems/jingyesi.mp4"
   },
   {
     "id": "1-2",
@@ -31,7 +32,8 @@
     ],
     "background": "这首诗是骆宾王七岁时所作，以其天真烂漫的童稚之笔，生动地描绘了鹅的特征和动态，被誉为千古传诵的咏物佳作。",
     "theme": "诗人以纯真的童心，细致入微地观察和描写鹅的外形特征和动态，展现了一幅生动活泼的画面，体现了作者的观察力和表现力。",
-    "image": "/images/poems/yonge.webp"
+    "image": "/images/poems/yonge.webp",
+    "video": "/videos/poems/yonge.mp4"
   },
   {
     "id": "1-3",
@@ -65,7 +67,8 @@
     ],
     "background": "这首诗反映了唐代农民的劳动生活，表达了诗人对农民的同情与关怀。李绅本人曾任县令，亲身体察民情，深知农民的辛苦。",
     "theme": "诗歌通过描写农民劳动的场景，表达了对农民的同情和对粮食来之不易的感慨，告诫人们要珍惜粮食，感恩农民。",
-    "image": "/images/poems/minnong2.webp"
+    "image": "/images/poems/minnong2.webp",
+    "video": "/videos/poems/minnong2.mp4"
   },
   {
     "id": "1-5",
@@ -82,7 +85,8 @@
     ],
     "background": "这首诗作于作者登临山西省永济县的鹳雀楼时所作。鹳雀楼是当时黄河岸边的一座高楼，登楼可以远眺黄河流域的壮丽景色。",
     "theme": "诗人通过登高望远的情境，展现出不断追求进步的精神，表达了诗人追求更高境界的豪迈气概。",
-    "image": "/images/poems/dengguanquelou.webp"
+    "image": "/images/poems/dengguanquelou.webp",
+    "video": "/videos/poems/dengguanquelou.mp4"
   },
   {
     "id": "1-6",
@@ -99,7 +103,8 @@
     ],
     "background": "这首诗描写诗人寻访隐居山林的高人未遇的经历，反映了唐代文人向往隐逸生活的思想。",
     "theme": "诗人通过寻访隐者未遇的经历，展现了一个清幽淡远的意境，表达了对隐逸生活的向往。",
-    "image": "/images/poems/xunyinzhebuyu.webp"
+    "image": "/images/poems/xunyinzhebuyu.webp",
+    "video": "/videos/poems/xunyinzhebuyu.mp4"
   },
   {
     "id": "1-7",
@@ -233,7 +238,8 @@
     ],
     "background": "这首诗作于柳宗元被贬谪到永州期间，他通过描写冬日江雪的景象，表达了对孤独和清冷的感受。",
     "theme": "诗人通过描写冬日江雪的景象，表达了对孤独和清冷的感受，展现了诗人内心的孤寂和对现实的无奈。",
-    "image": "/images/poems/jiangxue.webp"
+    "image": "/images/poems/jiangxue.webp",
+    "video": "/videos/poems/jiangxue.mp4"
   },
   {
     "id": "1-12",

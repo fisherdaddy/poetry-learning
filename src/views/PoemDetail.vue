@@ -80,6 +80,21 @@
               </div>
             </div>
 
+            <!-- 添加新的图片展示位置 -->
+            <div v-if="poem.image" class="mb-8">
+              <div class="max-w-2xl mx-auto overflow-hidden rounded-xl shadow-lg">
+                <div class="relative group">
+                  <img 
+                    :src="poem.image" 
+                    :alt="poem.title"
+                    class="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105"
+                    @click="showFullImage = true"
+                  />
+                  <div class="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors duration-300"></div>
+                </div>
+              </div>
+            </div>
+
             <!-- 标签 -->
             <div class="flex flex-wrap gap-2 justify-center mb-8">
               <span v-for="tag in poem.tags" 
@@ -163,6 +178,25 @@
     <div v-else class="pt-24 container mx-auto px-4 py-6 text-center text-gray-500">
       加载中...
     </div>
+
+    <!-- 添加全屏图片预览模态框 -->
+    <div v-if="showFullImage && poem.image" 
+         class="fixed inset-0 z-50 bg-black/90 flex items-center justify-center"
+         @click="showFullImage = false">
+      <img 
+        :src="poem.image" 
+        :alt="poem.title"
+        class="max-w-full max-h-full object-contain p-4"
+      />
+      <button 
+        class="absolute top-4 right-4 text-white/80 hover:text-white"
+        @click="showFullImage = false"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
   </div>
 </template>
 
@@ -175,6 +209,9 @@ import { poemsData } from '../data/poems/index'
 const route = useRoute()
 const router = useRouter()
 const poem = ref(null)
+
+// 添加图片预览状态控制
+const showFullImage = ref(false)
 
 // 动态导入数据的函数
 const getDataByType = async (type) => {
